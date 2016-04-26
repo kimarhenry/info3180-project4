@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Wishlist</title>
+	<link rel="stylesheet" type="text/css" href="../static/materialize/css/materialize.css">
+		<style type="text/css">
+	.holder{
+		margin-top: 225px;
+	}
+	.stretch{
+		width:400px;
+		margin-left: 50px;
+	}
+	.pretty{
+		font-color:blue;
+	}
+	</style>
+</head>
+<body>
+
+	{% from "_formhelpers.html" import render_field %}
+	<div class="row">
+	<div class="col l4">&nbsp</div>
+
+
+<!--container with the form -->
+
+		<div class="col s12 l4 holder">
+		<center>
+		{{unique}}
+			
+			<form action="/" method="POST">
+				{{render_field(form.username)}}
+				<br>
+				{{render_field(form.password)}}
+				<input type="submit" value="Sign Up" class="btn stretch"/>
+				<p class="stretch pretty">Already a user? <a href="login">Login to continue</a></p>
+			</form>
+		</center>
+		</div>
+<!--container with the form  -->
+
+
+	<div class="col l4">&nbsp</div>
+		
+	</div>
+
+</body>
+</html>
