@@ -1,5 +1,6 @@
 from flask import Flask,render_template,request,session,url_for,redirect,g,session
 from forms import LoginForm,fetchUrl,WishInfo
+from passlib.apps import custom_app_context as pwd_context
 from database import db,Userinfo,Wishlist
 from bs4 import BeautifulSoup
 import urllib
@@ -11,6 +12,14 @@ app=Flask(__name__)
 app.secret_key="sdjehisdubgfhnscnghs"
 router={'loggedin':''}
 
+def hash_password(passwrd):
+        return pwd_context.encrypt(passwrd)
+
+
+
+def verify_password(passwrd,passwrd_hash):
+        return pwd_context.verify(passwrd,passwrd_hash)
+
 
 @app.route("/", methods=['GET','POST'])
 def home():
@@ -18,7 +27,7 @@ def home():
 	form=LoginForm(request.form)
 	if request.method=='POST' and form.validate():
 		try:
-			todb=Userinfo(form.username.data,form.password.data)
+			todb=Userinfo(form.username.data,hash_password(form.password.data))
 			db.session.add(todb)
 			db.session.commit()
 			return redirect(url_for('login'))
@@ -37,7 +46,8 @@ def login():
 	form=LoginForm(request.form)
 	if request.method=='POST' and form.validate():
 		query=db.session.query(Userinfo).filter_by(username=form.username.data).first()
-		if query is None:
+                passFound=verify_password(form.password.data,name.password)
+		if query is not (passFound):
 			notUser="Incorrect username/password"
 			found+=1
 		if found==0:
